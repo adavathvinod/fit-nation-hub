@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, User, Phone, Mail, ArrowRight, ArrowLeft, Check } from "lucide-react";
+import { X, User, Phone, Mail, ArrowRight, ArrowLeft, Check, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -19,17 +21,36 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
     preferredTime: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = () => {
-    // Here you would typically send the data to a backend
-    setIsSubmitted(true);
-    setTimeout(() => {
-      onClose();
-      setStep(1);
-      setBookingType(null);
-      setFormData({ name: "", phone: "", email: "", preferredTime: "" });
-      setIsSubmitted(false);
-    }, 3000);
+  const handleSubmit = async () => {
+    setIsLoading(true);
+    try {
+      const { error } = await supabase.from("bookings").insert({
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email || null,
+        booking_type: bookingType!,
+        preferred_time: formData.preferredTime || null,
+      });
+
+      if (error) throw error;
+
+      setIsSubmitted(true);
+      toast.success("Booking submitted successfully!");
+      setTimeout(() => {
+        onClose();
+        setStep(1);
+        setBookingType(null);
+        setFormData({ name: "", phone: "", email: "", preferredTime: "" });
+        setIsSubmitted(false);
+      }, 3000);
+    } catch (error) {
+      console.error("Booking error:", error);
+      toast.error("Failed to submit booking. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -238,11 +259,15 @@ const BookingModal = ({ isOpen, onClose }: BookingModalProps) => {
                       </button>
                       <button
                         onClick={handleSubmit}
-                        disabled={!formData.preferredTime}
+                        disabled={!formData.preferredTime || isLoading}
                         className="lime-btn flex-1 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                       >
-                        <Check className="w-4 h-4" />
-                        Confirm Booking
+                        {isLoading ? (
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                        ) : (
+                          <Check className="w-4 h-4" />
+                        )}
+                        {isLoading ? "Submitting..." : "Confirm Booking"}
                       </button>
                     </div>
                   </motion.div>

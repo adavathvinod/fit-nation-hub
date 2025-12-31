@@ -3,14 +3,20 @@ import { useRef, useState } from "react";
 import { X } from "lucide-react";
 import gymInterior from "@/assets/gym-interior.png";
 import gymOffice from "@/assets/gym-office.png";
+import galleryGroup from "@/assets/gallery-group.png";
+import galleryVisitors from "@/assets/gallery-visitors.png";
+import galleryWeights from "@/assets/gallery-weights.png";
+import galleryYoga from "@/assets/gallery-yoga.png";
+import galleryTeam from "@/assets/gallery-team.png";
 
 const galleryImages = [
-  { src: gymInterior, alt: "Gym Interior - Weight Training Area" },
+  { src: galleryGroup, alt: "Group Training Session" },
+  { src: galleryWeights, alt: "Weight Training Area" },
+  { src: galleryVisitors, alt: "Gym Members" },
+  { src: galleryYoga, alt: "Yoga & Flexibility Zone" },
+  { src: galleryTeam, alt: "Our Team" },
+  { src: gymInterior, alt: "Gym Interior" },
   { src: gymOffice, alt: "Consultation Office" },
-  { src: gymInterior, alt: "Cardio Zone" },
-  { src: gymOffice, alt: "Personal Training" },
-  { src: gymInterior, alt: "Strength Equipment" },
-  { src: gymOffice, alt: "Member Services" },
 ];
 
 const GallerySection = () => {
