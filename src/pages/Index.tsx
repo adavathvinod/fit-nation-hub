@@ -1,12 +1,36 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import Navbar from "@/components/Navbar";
+import HeroSection from "@/components/HeroSection";
+import GallerySection from "@/components/GallerySection";
+import ServicesSection from "@/components/ServicesSection";
+import PricingSection from "@/components/PricingSection";
+import LocationSection from "@/components/LocationSection";
+import ReviewsSection from "@/components/ReviewsSection";
+import Footer from "@/components/Footer";
+import FloatingButtons from "@/components/FloatingButtons";
+import QuickBookButton from "@/components/QuickBookButton";
+import BookingModal from "@/components/BookingModal";
 
 const Index = () => {
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background">
+      <Navbar />
+      <HeroSection onBookClick={() => setIsBookingOpen(true)} />
+      <GallerySection />
+      <ServicesSection />
+      <PricingSection onBookClick={() => setIsBookingOpen(true)} />
+      <LocationSection />
+      <ReviewsSection />
+      <Footer />
+      
+      {/* Floating Elements */}
+      <FloatingButtons />
+      <QuickBookButton onClick={() => setIsBookingOpen(true)} />
+      
+      {/* Booking Modal */}
+      <BookingModal isOpen={isBookingOpen} onClose={() => setIsBookingOpen(false)} />
     </div>
   );
 };
